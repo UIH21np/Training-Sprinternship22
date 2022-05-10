@@ -13,7 +13,7 @@ from database_connection import DatabaseConnection
 app = FastAPI()
 
 # TODO (5.4.1): define database connection
-
+connection = DatabaseConnection()
 
 # TODO (3.2): add CORS middleware
 app.add_middleware(CORSMiddleware,allow_origins=CORS_URLS,allow_credentials=True,allow_methods=["*"],allow_headers=["*"],)
@@ -30,12 +30,32 @@ a index function to test if server is running
 
 
 # TODO (5.4.2)
+@app.on_event("startup")
+@repeat_every(seconds = 15)
+
+async def update_bitcoin_price() -> None:
+    price = get_live_bitcoin_price()
+    timestamp = convert_date_to_text(datetime.now())
+    if price == -1:
+        pass
+    else:
+        connection.insert_timestamp(BitcoinTimestamp(timestamp,price))
 """
 repeated task to update bitcoin prices periodically
 """
 
 
 # TODO (5.4.3)
+@app.get("/get_bitcoin_prices")
+async def data():
+    content = connection.get_all_timestampes()
+    print(content)
+    bitcoin_list = [] 
+    for i in content:
+        bitcoin_list.append(i.__dict__)
+    return json.dumps(bitcoin_list)
+    
+
 """
 API endpoint to get bitcoin prices
 

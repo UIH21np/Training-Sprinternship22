@@ -6,16 +6,21 @@ import requests
 
 # TODO (5.1) 
 def get_live_bitcoin_price():
-    """
-    gets live price of bitcoin from bitcoin open API
+    #make a request to get the url
+    response = requests.get(BITCOIN_CURRENT_PRICE_URL)
+    #check if response status code is 200
+    if response.status_code == 200:
+        #get response body in text
+        print(response.text)
+        #Convert response to JSON
+        data = response.json()
+        price = (data['bpi']['USD']['rate']).replace(',','')
+        return float(price)
+    #otherwise, return -1
+    else:
+        return -1
 
-    :return:
-        the price in USD
-    :rtype:
-        float
-    """
-    pass
-
+#Step (5.2)
 def create_database():
     """
     creates a bitcoin database with a table of timestamp (TEXT) and price (REAL/float) fields
