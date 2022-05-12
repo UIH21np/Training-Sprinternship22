@@ -7,7 +7,9 @@ import styles from "./Home.module.css"
 function Home () {
   // ToDo 10.3.1
   /* set variables (data, shown data, currency) using hooks (useState) */
-  
+  const [data, setData] = useState([]);
+  const [ShowData, setShowData] = useState([]);
+  const [currency, setCurrency] = useState("USD");
 
   // ToDo 10.3.2
   /* 
@@ -16,8 +18,12 @@ function Home () {
   Hint: with axios use .get(url of backend) .then(response =>{ do something with response}) refrence https://axios-http.com/docs/example
   */
   const updateData = () => {
-  }
-  
+    axios.get('http://127.0.0.1:8000/get_bitcoin_prices')
+    .then(function (response) {
+      console.log(response);
+      setData(JSON.parse(response.data))
+  })
+}
   // update data on initialization (useEffect [], no dependencies)
   useEffect(() =>{
     updateData()
@@ -28,9 +34,19 @@ function Home () {
   /* update data every 5 minutes (useEffect [data] as the dependency & setTimeout call updateData) 
     setTimeout refrence https://developer.mozilla.org/en-US/docs/Web/API/setTimeout
   */
+ useEffect(()=>{
+  setTimeout(updateData(), 300000)
+ },[data])
+ 
 
 
   // ToDo 10.3.3
+  useEffect(() =>{
+    let currShowData = data
+    if (currency == "EUR"){currShowData = currShowData.map(el => ({...el, price:parseFloat((el.price*0.95).toFixed(4))}))}
+    currShowData.sort((a,b)=> {return(new Date(b.timestamp) - new Date(a.timestamp))})
+    setShowData(currShowData)
+  },[currency,data])
   /*
   set data to be shown ( sorting date descending and changing price if other currency is chosen) 
   (useEffect [currency,data] as the dependecies)
@@ -56,15 +72,19 @@ function Home () {
     string
   */
   const changeCurrency = (currency) =>{
-  }
+      setCurrency(currency);
+    }
 
   // ToDo 10.3.5
   // call CurrencyButton and TimeCurrencyCard pass the variables
   return (
-      <>
-      </>
+    <>
+      <div className={styles.bodyContainer}>
+        <CurrencyButton currency={currency} changeCurrency={changeCurrency}/>
+        <TimeCurrencyCard currency={currency} showData={ShowData}/>
+      </div> 
+    </>
   );
-
 }
 
 export default Home;

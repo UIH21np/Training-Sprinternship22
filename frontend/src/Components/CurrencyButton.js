@@ -13,10 +13,17 @@ import styles from "./CurrencyButton.module.css"
 function CurrencyButton ({currency,changeCurrency}) {
   // ToDo 10.1
   return (
-    <>
-    </>     
+    <div>
+          <button onClick={()=>changeCurrency("USD")}
+              className={currency === 'USD' ? styles.currencyButtonActive : styles.currencyButtonDefault}> 
+                USD
+          </button>
+          <button onClick={()=>changeCurrency("EUR")}
+              className={currency === 'EUR' ? styles.currencyButtonActive : styles.currencyButtonDefault}> 
+                EUR
+          </button>  
+    </div>
   );
 
 }
-
 export default CurrencyButton;
