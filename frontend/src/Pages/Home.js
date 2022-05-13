@@ -81,6 +81,7 @@ function Home () {
     <>
       <div className={styles.bodyContainer}>
         <CurrencyButton currency={currency} changeCurrency={changeCurrency}/>
+        <h1 style={{margin:0}}><center>LIVE BITCOIN PRICES</center></h1>
         <TimeCurrencyCard currency={currency} showData={ShowData}/>
       </div> 
     </>

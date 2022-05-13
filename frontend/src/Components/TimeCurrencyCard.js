@@ -71,10 +71,14 @@ function TimeCurrencyCard ({currency,showData}) {
         <>
             {showData.map((d, index) => (
             <div className = {priceColor(index)}> 
-            <div className = {styles.cardContainer}>
-                {d.timestamp} {d.price}
-                {currency === 'USD' ? "$" : "€"}
-                {arrowSign(index)}
+                <div className = {styles.cardContainer}>
+            <div className={styles.timeContainer}>
+            {d.timestamp}
+            </div>
+            <p></p>
+            {currency === 'USD' ? "$" : "€"}
+            {d.price}
+            {arrowSign(index)}
             </div>
             </div>
             ))}

@@ -1,26 +1,30 @@
-.buttonContainer {
+.bodyContainer {
+    background-color: #1d1d1d;
+    position: absolute;
 }
 
 .currencyButtonActive {
-    font-size: 12px;
+    font-size: 15px;
     background-color: #0a0101;
-    color: #55d714;
-    border-radius: 9px;
-    padding: 9px;
+    color: #c5508c;
+    border-radius: 8px;
+    padding: 8px;
     border: 0;
     margin: 0;
     position: absolute;
     font-weight: bold;
+    font-family: Georgia;
 }
 
 .currencyButtonDefault {
     background-color: #0a0101; 
-    font-size: 16px;
-    color: #36add1;
+    font-size: 15px;
+    color: #c5508c;
     border-radius: 8px;
     padding: 8px;
     border: 0; 
     position: absolute;
-    top: 40px;
+    top: 30px;
     font-weight: bold;
+    font-family: Georgia;
 }

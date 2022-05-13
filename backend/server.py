@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from constants import CORS_URLS
 from bitcoin_timestamp import BitcoinTimestamp
-from custom_util import get_live_bitcoin_price, convert_date_to_text
+from custom_util import get_live_bitcoin_price, convert_date_to_text, get_USD_EUR_multiplier
 from database_connection import DatabaseConnection
 
 # TODO (3.1): define FastAPI app
@@ -19,11 +19,20 @@ connection = DatabaseConnection()
 app.add_middleware(CORSMiddleware,allow_origins=CORS_URLS,allow_credentials=True,allow_methods=["*"],allow_headers=["*"],)
 
 # TODO: a root function to test if server is running
-@app.get("/")
-async def root():
-    content = {"message":"Hello World! This is bitcoin monitoring service"}
-    return json.dumps(content)
-
+@app.post("/convert_bitcoin_prices")
+async def get_body(request: Request):
+    request = request.json()
+    currency = request["messages"]
+    content = connection.get_all_timestampes()
+    print(content)
+    bitcoin_list = [] 
+    if currency == "EUR":
+        multiplier = get_USD_EUR_multiplier()
+    for i in content:
+        if currency == "EUR":
+            i.price = (i.price)*multiplier
+        bitcoin_list.append(i.__dict__)
+    return json.dumps(bitcoin_list)
 """
 a index function to test if server is running
 """
@@ -31,7 +40,7 @@ a index function to test if server is running
 
 # TODO (5.4.2)
 @app.on_event("startup")
-@repeat_every(seconds = 15)
+@repeat_every(seconds = 5*60)
 
 async def update_bitcoin_price() -> None:
     price = get_live_bitcoin_price()
@@ -46,7 +55,7 @@ repeated task to update bitcoin prices periodically
 
 
 # TODO (5.4.3)
-@app.get("/get_bitcoin_prices")
+@app.post("/get_bitcoin_prices")
 async def data():
     content = connection.get_all_timestampes()
     print(content)

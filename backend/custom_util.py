@@ -20,6 +20,25 @@ def get_live_bitcoin_price():
     else:
         return -1
 
+def get_USD_EUR_multiplier():
+    response = requests.get(BITCOIN_CURRENT_PRICE_URL)
+    #check if response status code is 200
+    if response.status_code == 200:
+        #get response body in text
+        print(response.text)
+        #Convert response to JSON
+        data = response.json()
+        price = (data['bpi']['EUR']['rate']).replace(',','')
+        price_USD = (data['bpi']['USD']['rate']).replace(',','')
+        price = float(price)
+        price_USD = float(price_USD)
+        multiplier = price/price_USD
+        return multiplier
+    #otherwise, return -1
+    else:
+        return -1
+
+
 #Step (5.2)
 def create_database():
     """
